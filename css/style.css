@@ -50,6 +50,7 @@ body {
   -o-border-radius:  22px;
 }
 .input-search {
+  width: 100%;
   background-color: transparent;
   border: none;
   outline: none;
@@ -69,9 +70,6 @@ body {
   display: flex;
   align-items: center;
   margin-left: auto;
-}
-.icon-video {
-  opacity: 0.24;
 }
 .icons-link {
   text-decoration: none;
