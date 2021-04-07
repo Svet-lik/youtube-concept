@@ -2,12 +2,14 @@
   box-sizing: border-box;
 }
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Mulish", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 .header {
   display: flex;
   align-items: center;
-  padding: 20px 70px 20px 32px;
+  padding: 20px 70px 50px 32px;
 }
 .menu-button {
   display: flex;
@@ -43,11 +45,11 @@ body {
   padding: 12px 17px 12px 23px;
   margin-left: 59px;
   background-color: #ebebeb;
-  border-radius:  22px;
-  -webkit-border-radius:  22px;
-  -moz-border-radius:  22px;
-  -ms-border-radius:  22px;
-  -o-border-radius:  22px;
+  border-radius: 22px;
+  -webkit-border-radius: 22px;
+  -moz-border-radius: 22px;
+  -ms-border-radius: 22px;
+  -o-border-radius: 22px;
 }
 .input-search {
   width: 100%;
@@ -92,4 +94,45 @@ body {
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
+}
+.sidebar {
+  padding-left: 32px;
+}
+.nav-menu {
+  margin-top: 0;
+  margin-bottom: 50px;
+  padding-left: 0;
+  list-style: none;
+}
+.nav-item {
+  margin-bottom: 28px;
+}
+.nav-item .icon {
+  fill: #898989;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  color: #898989;
+  text-decoration: none;
+}
+.nav-link:hover {
+  color: #ff0000;
+}
+.nav-link:hover .icon {
+  fill: #ff0000;
+}
+.nav-text {
+  margin-left: 14px;
+}
+.menu-title {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 23px;
+  margin-bottom: 30px;
+}
+.nav-image {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
 }
