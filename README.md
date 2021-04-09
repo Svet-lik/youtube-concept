@@ -5,3 +5,4 @@
 - CSS
 - Normalize.css
 - CSG Sprites
+- SwiperJS
