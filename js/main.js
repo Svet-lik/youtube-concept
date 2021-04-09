@@ -2,7 +2,24 @@ const swiper = new Swiper('.channel-slider', {
   // Optional parameters
   loop: true,
   slidesPerView: 'auto',
-  spaceBetween: 30,
+  spaceBetween: 5,
+  breakpoints: {
+    1900: {
+      spaceBetween: 30
+    },
+    1400: {
+      spaceBetween: 20
+    },
+    1200: {
+      spaceBetween: 15
+    },
+    992: {
+      spaceBetween: 10
+    },
+    760: {
+      spaceBetween: 7
+    }
+  },
 
 
   // Navigation arrows
@@ -16,7 +33,16 @@ const swiperR = new Swiper('.recommended-slider', {
   // Optional parameters
   loop: true,
   slidesPerView: 'auto',
-  spaceBetween: 30,
+  spaceBetween: 10,
+  breakpoints: {
+  1600: {
+    spaceBetween: 30
+  },
+  1100: {
+    spaceBetween: 20
+  },
+  
+},
 
 
   // Navigation arrows
@@ -30,7 +56,24 @@ const swiperRC = new Swiper('.recommended-channel-slider', {
   // Optional parameters
   loop: true,
   slidesPerView: 'auto',
-  spaceBetween: 30,
+  spaceBetween: 20,
+  breakpoints: {
+    1900: {
+      spaceBetween: 30
+    },
+    1400: {
+      spaceBetween: 20
+    },
+    1200: {
+      spaceBetween: 15
+    },
+    992: {
+      spaceBetween: 10
+    },
+    760: {
+      spaceBetween: 7
+    }
+  },
 
 
   // Navigation arrows
@@ -39,3 +82,16 @@ const swiperRC = new Swiper('.recommended-channel-slider', {
     prevEl: '.recommended-channel-button-prev',
   },
 });
+
+const mobileSearch = document.querySelector('.mobile-search');
+const  inputGroup = document.querySelector('.input-group');
+
+mobileSearch.addEventListener('click', () => {
+  inputGroup.classList.add('is-open');
+});
+
+if (document.documentElement.scrollWidth <= 640) {
+  swiper.destroy();
+  swiperR.destroy();
+  swiperRC.destroy();
+}
