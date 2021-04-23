@@ -155,7 +155,7 @@ function init() {
 
 
 	const openYoutubeModal = e => {
-			e.preventDefault();
+			
 			const target = e.target.closest('.youtube-modal');
 			if (!target) return;
 
@@ -164,7 +164,7 @@ function init() {
 			let idVideo = search ? href.match(/(\?|&)v=([^&]+)/)[2] : href.match(/(\.be\/)([^&]+)/)[2];
 
 			if (idVideo.length === 0) return;
-
+			e.preventDefault();
 
 			animation(overlay, {
 					start: [['display', 'block']],

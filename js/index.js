@@ -3,9 +3,13 @@ const trendingList = document.querySelector('.trending-list');
 const musicList = document.querySelector('.music-list');
 const authBtn = document.querySelector('.auth-btn');
 const userAvatar = document.querySelector('.user-avatar');
+const navMenuMore = document.querySelector('.nav-menu-more');
+const showMore = document.querySelector('.show-more');
+const formSearch = document.querySelector('.form-search');
+const navMenuSubscriptions = document.querySelector('.nav-menu-subscriptions')
 
 // одна карточка с видео
-const creatCard = (dataVideo) => {
+const creatCard = dataVideo => {
   const imgUrl = dataVideo.snippet.thumbnails.high.url;
   const videoId = dataVideo.id.videoId || dataVideo.id;
   const titleVideo = dataVideo.snippet.title;
@@ -41,15 +45,25 @@ const createList = (wrapper, listVideo) => {
   listVideo.forEach(item => wrapper.append(creatCard(item)));
 
 };
-
-// временный запрос, скоро удалим
-const getChannel = () => {
-  return gapi.client.youtube.channels.list({
-    part: 'snippet, statistics',
-    id: 'UCf2LGgt4l6NoroDrHx8uD_Q',
-  }).execute(responce => {
-    console.log(responce);
-  })
+// получает элемент меню в подписке
+const createMenuSubscriptionsItem = elem => {
+  const menuItem = document.createElement('li');
+  menuItem.classList.add('nav-item');
+  menuItem.innerHTML = `
+  <a href="https://youtu.be/${elem.snippet.resourceId.channelId}" class="nav-link">
+    <img
+      src="${elem.snippet.thumbnails.default.url}"
+      alt="Photo: ${elem.snippet.title}"
+      class="nav-image"
+    />
+    <span class="nav-text">${elem.snippet.title}</span>
+  </a>`;
+  return menuItem;
+};
+// вывод меню подписки
+const createMenuSubscriptions = data => {
+  navMenuSubscriptions.textContent = '';
+  data.forEach(item => navMenuSubscriptions.append(createMenuSubscriptionsItem(item)))
 };
 
 // youtubeAPI
@@ -59,9 +73,11 @@ const handleSuccessAuth = data => {
   userAvatar.classList.remove('hide');
   userAvatar.src = data.getImageUrl();
   userAvatar.alt = data.getName();
-
-  getChannel();
+  requestSubscriptions(data => {
+    createMenuSubscriptions(data);
+  });
 };
+
 const handleNoAuth = () => {
   authBtn.classList.remove('hide');
   userAvatar.classList.add('hide');
@@ -92,7 +108,7 @@ const updateStatusAuth = data => {
   }
 };
 
-
+// инициализация
 function initClient() {
   gapi.client.init({
     'apiKey': API_KEY,
@@ -103,18 +119,105 @@ function initClient() {
     updateStatusAuth(gapi.auth2.getAuthInstance());
     authBtn.addEventListener('click', handleAuth);
     userAvatar.addEventListener('click', handleSignout);
-  }).catch(() => {
+  }).then(loadScreen)
+  .catch(err => {
     authBtn.removeEventListener('click', handleAuth);
-    userAvatar.removeEventListener('click', handleSignOut);
-
-    alert('Авторизация не возможна')
+    userAvatar.removeEventListener('click', handleSignout);
+    console.warn('Авторизация не возможна, код ошибки ', err);
   });
 };
 
 gapi.load('client:auth2', initClient);
 
+// временный запрос, скоро удалим
+const getChannel = () => {
+  return gapi.client.youtube.channels.list({
+    part: 'snippet, statistics',
+    id: 'UCf2LGgt4l6NoroDrHx8uD_Q',
+  }).execute(responce => {
+    console.log(responce);
+  })
+};
 
 
-createList(gloAcademyList, gloAcademy);
-createList(trendingList, trending);
-createList(musicList, music);
+// запросы
+const requestVideos = (channelId, callback, maxResults = 6) => {
+  gapi.client.youtube.search.list({    
+    part: 'snippet',
+    channelId,
+    maxResults,
+    order: 'date',
+  }).execute(responce => {
+    callback(responce.items)
+  })
+};
+
+const requestTrending = (callback, maxResults = 6) => {
+  gapi.client.youtube.videos.list({
+    part: 'snippet, statistics',
+    chart: 'mostPopular',
+    regionCode: 'RU',
+    // videoCategoryId: 0,
+    maxResults,
+  }).execute(responce => {
+    callback(responce.items)
+  })
+};
+
+const requestMusic = (callback, maxResults = 6) => {
+  gapi.client.youtube.videos.list({
+    part: 'snippet, statistics',
+    chart: 'mostPopular',
+    regionCode: 'RU',
+    videoCategoryId: 10,
+    maxResults,
+  }).execute(responce => {
+    callback(responce.items)
+  })
+};
+
+const requestSearch = (searchText, callback, maxResults = 6) => {
+  gapi.client.youtube.search.list({    
+    part: 'snippet',
+    q: searchText,
+    order: 'relevance',
+    maxResults,
+  }).execute(responce => {
+    callback(responce.items)
+  })
+};
+const requestSubscriptions = (callback, maxResults = 6) => {
+  gapi.client.youtube.subscriptions.list({
+    part: 'snippet',
+    mine: true,
+    maxResults,
+    order: 'unread',
+  }).execute(responce => {
+    callback(responce.items)
+})};
+
+const loadScreen = () => {
+  requestVideos('UCVswRUcKC-M35RzgPRv8qUg', data => {
+    createList(gloAcademyList, data);
+  });
+  requestTrending(data => {
+    createList(trendingList, data);
+  });
+  requestMusic(data => {
+    createList(musicList, data);
+  });
+};
+
+
+
+showMore.addEventListener('click', evt => {
+  evt.preventDefault();
+  navMenuMore.classList.toggle('nav-menu-more-show')
+});
+
+formSearch.addEventListener('submit', evt => {
+  evt.preventDefault();
+  requestSearch(formSearch.elements.search.value, data => {
+    createList(gloAcademyList, data);
+  }, 20);
+})
