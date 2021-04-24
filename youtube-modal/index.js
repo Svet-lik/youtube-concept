@@ -35,7 +35,7 @@
 			const max = Math.max(from, to);
 			const min = Math.min(from, to);
 			const step = (max - min) / count;
-			console.log(min === to)
+			// console.log(min === to)
 			allAnimation.push({style, from, to, step, reverse: min === to})
 		});
 
@@ -43,7 +43,7 @@
 		const rafAnimation = function () {
 
 			allAnimation.forEach((item) => {
-				console.log(item.from, item.step)
+				// console.log(item.from, item.step)
 				if (item.reverse) {
 					item.from -= item.step
 				} else {
@@ -54,7 +54,7 @@
 			})
 
 			counter++;
-			console.log(allAnimation)
+			// console.log(allAnimation)
 			if (counter < count) {
 
 				requestAnimationFrame(rafAnimation);
